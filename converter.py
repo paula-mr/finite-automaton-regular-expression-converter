@@ -65,6 +65,9 @@ class RegularExpressionConverter:
         r3 = self.__get_transition(state_e, state_e2)
         if not r1 is None and not r3 is None:
             self.states[state_e1][state_e2] = self.__format_transition(s, r1, r2, r3)
+    
+    def __get_transition(self, e1, e2):
+        return self.states[e1].get(e2) if self.states.get(e1) is not None else None
 
     def __format_transition(self, s, r1, r2, r3):
         first_term = s if s is not None else None
@@ -108,7 +111,4 @@ class RegularExpressionConverter:
         if term[0] == '(' and term[-1] == ')':
             return term
         return '(' + term + ')'
-
-    def __get_transition(self, e1, e2):
-        return self.states[e1].get(e2) if self.states.get(e1) is not None else None
             
