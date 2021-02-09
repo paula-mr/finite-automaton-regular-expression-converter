@@ -6,7 +6,6 @@ from converter import convert_fa_to_regex
 def main(argv):
     input_file = get_startup_arguments(argv)
     states, alphabet, initial_states, final_states = read_file(input_file)
-    # print(states)
     result = convert_fa_to_regex(states, alphabet, initial_states, final_states)
     print(result)
 
