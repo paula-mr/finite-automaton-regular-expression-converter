@@ -2,10 +2,10 @@ def convert_fa_to_regex(states, alphabet, initial_states, final_states):
     initial_state, final_state, states = __pre_process_fa_to_er(states, initial_states, final_states)
     internal_states = __filter_internal_states(states, initial_state, final_state)
     while len(internal_states) > 0:
-        state_e = __choose_e_with_lower_pe(internal_states)
-        copy_states = [state for state in states if state != state_e]
-        for state_e1 in copy_states:
-            for state_e2 in copy_states:
+        state_e = __choose_state_e_with_lower_pe(internal_states, states)
+        states_other_than_e = [state for state in states if state != state_e]
+        for state_e1 in states_other_than_e:
+            for state_e2 in states_other_than_e:
                 s = __get_transition(state_e1, state_e2, states)
                 r1 = __get_transition(state_e1, state_e, states)
                 r2 = __get_transition(state_e, state_e, states)
@@ -18,8 +18,24 @@ def convert_fa_to_regex(states, alphabet, initial_states, final_states):
     regex = states[initial_state][final_state]
     return regex
 
-def __choose_e_with_lower_pe(states):
-    return states[0]
+def __choose_state_e_with_lower_pe(internal_states, states):
+    state_e = None
+    number_of_transition_states = None
+    for state in internal_states:
+        states_other_than_e = [state for state in states if state != state_e]
+        count_transition_states = 0
+        for state_e1 in states_other_than_e:
+            for state_e2 in states_other_than_e:
+                r1 = __get_transition(state_e1, state, states)
+                r3 = __get_transition(state, state_e2, states)
+                if not r1 is None and not r3 is None:
+                    count_transition_states = count_transition_states + 1
+        
+        if number_of_transition_states is None or count_transition_states < number_of_transition_states:
+            state_e = state
+            number_of_transition_states = count_transition_states
+
+    return state_e
 
 def __filter_internal_states(states, initial_state, final_state):
     return [state for state in states if state != initial_state and state != final_state]
