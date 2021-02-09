@@ -3,7 +3,7 @@ class RegularExpressionConverter:
         self.alphabet = alphabet
         self.initial_state, self.final_state, self.states = self.__pre_process_initial_and_final_states(states, initial_states, final_states)
 
-    def convert(self):
+    def generate_regex(self):
         internal_states = self.__filter_internal_states()
         while len(internal_states) > 0:
             state_e = self.__choose_state_e_with_lower_pe(internal_states)

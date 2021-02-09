@@ -8,7 +8,7 @@ def main(argv):
     input_file = get_startup_arguments(argv)
     states, alphabet, initial_states, final_states = read_file(input_file)
     converter = RegularExpressionConverter(states, initial_states, final_states, alphabet)
-    result = converter.convert()
+    result = converter.generate_regex()
     print(result)
 
 def get_startup_arguments(argv):
