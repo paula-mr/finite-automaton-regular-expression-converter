@@ -2,12 +2,13 @@ import sys
 import os
 
 from file_decoder import read_file
-from converter import convert_fa_to_regex
+from converter import FiniteAutomatonRegularExpressionConverter
 
 def main(argv):
     input_file = get_startup_arguments(argv)
     states, alphabet, initial_states, final_states = read_file(input_file)
-    result = convert_fa_to_regex(states, alphabet, initial_states, final_states)
+    converter = FiniteAutomatonRegularExpressionConverter(states, initial_states, final_states, alphabet)
+    result = converter.convert()
     print(result)
 
 def get_startup_arguments(argv):
