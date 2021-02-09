@@ -1,0 +1,14 @@
+p0,i1,i0,p1,e
+a,b
+p0
+i1
+p0,b,i1
+p0,a,i0
+i1,a,p1
+i1,b,e
+e,a,e
+e,b,e
+p1,b,e
+p1,a,i1
+i0,b,p1
+i0,a,p0
