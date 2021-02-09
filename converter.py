@@ -68,9 +68,9 @@ class FiniteAutomatonRegularExpressionConverter:
 
     def __format_transition(self, s, r1, r2, r3):
         first_term = s if s is not None else None
-        second_term = self.__format_concat_term(r1) if r1 else ''
+        second_term = r1 if r1 else ''
         third_term = r2 if r2 is not None else None
-        fourth_term = self.__format_concat_term(r3) if r3 else ''
+        fourth_term = r3 if r3 else ''
 
         first_half = None
         if not first_term is None:
@@ -84,7 +84,7 @@ class FiniteAutomatonRegularExpressionConverter:
                 return self.__format_sum(first_half, 'λ')
         
         second_half = second_term
-        second_half = second_half + '(' + third_term + ')*' if third_term else second_half
+        second_half = second_half + self.__format_parenthesis(third_term) + '*' if third_term else second_half
         second_half = second_half + fourth_term
         return self.__format_sum(first_half, second_half)
 
@@ -97,12 +97,17 @@ class FiniteAutomatonRegularExpressionConverter:
             return term2
         if term1 == term2:
             return term1
-        return '(' + term1 + '+' + term2 + ')'
+        return '(' + self.__format_complex_terms(term1) + '+' + self.__format_complex_terms(term2) + ')'
 
-    def __format_concat_term(self, term):
-        if '+' in term and term[0] != '(' and term[-1] != ')':
-            return '(' + term + ')'
+    def __format_complex_terms(self, term):
+        if '+' in term or '*' in term or '(' in term:
+            return ' (' + term + ') '
         return term
+
+    def __format_parenthesis(self, term):
+        if term[0] == '(' and term[-1] == ')':
+            return term
+        return '(' + term + ')'
 
     def __get_transition(self, e1, e2):
         return self.states[e1].get(e2) if self.states.get(e1) is not None else None
