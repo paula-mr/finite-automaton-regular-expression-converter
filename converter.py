@@ -3,26 +3,42 @@ def convert_fa_to_regex(states, alphabet, initial_states, final_states):
     internal_states = __filter_internal_states(states, initial_state, final_state)
     while len(internal_states) > 0:
         state_e = __choose_state_e_with_lower_pe(internal_states, states)
-        states_other_than_e = [state for state in states if state != state_e]
+        states_other_than_e = __filter_states_other_than_e(states, state_e)
         for state_e1 in states_other_than_e:
             for state_e2 in states_other_than_e:
-                s = __get_transition(state_e1, state_e2, states)
-                r1 = __get_transition(state_e1, state_e, states)
-                r2 = __get_transition(state_e, state_e, states)
-                r3 = __get_transition(state_e, state_e2, states)
-                if not r1 is None and not r3 is None:
-                    states[state_e1][state_e2] = __format_transition(s, r1, r2, r3)
+                __process_state(state_e, state_e1, state_e2, states)
         states.pop(state_e)
         internal_states = __filter_internal_states(states, initial_state, final_state)
     
     regex = states[initial_state][final_state]
     return regex
 
+def __filter_internal_states(states, initial_state, final_state):
+    return [state for state in states if state != initial_state and state != final_state]
+
+def __filter_states_other_than_e(states, state_e):
+    return [state for state in states if state != state_e]
+
+def __pre_process_fa_to_er(states, initial_states, final_states):
+    new_initial_state = 'new_i'
+    states[new_initial_state] = {}
+    
+    for state in initial_states:
+        states[new_initial_state][state] = ''
+                
+    new_final_state = 'new_f'
+    states[new_final_state] = {}
+    
+    for state in final_states:
+        states[state][new_final_state] = ''
+    
+    return new_initial_state, new_final_state, states
+
 def __choose_state_e_with_lower_pe(internal_states, states):
     state_e = None
     number_of_transition_states = None
     for state in internal_states:
-        states_other_than_e = [state for state in states if state != state_e]
+        states_other_than_e = __filter_states_other_than_e(states, state_e)
         count_transition_states = 0
         for state_e1 in states_other_than_e:
             for state_e2 in states_other_than_e:
@@ -39,8 +55,13 @@ def __choose_state_e_with_lower_pe(internal_states, states):
 
     return state_e
 
-def __filter_internal_states(states, initial_state, final_state):
-    return [state for state in states if state != initial_state and state != final_state]
+def __process_state(state_e, state_e1, state_e2, states):
+    s = __get_transition(state_e1, state_e2, states)
+    r1 = __get_transition(state_e1, state_e, states)
+    r2 = __get_transition(state_e, state_e, states)
+    r3 = __get_transition(state_e, state_e2, states)
+    if not r1 is None and not r3 is None:
+        states[state_e1][state_e2] = __format_transition(s, r1, r2, r3)
 
 def __format_transition(s, r1, r2, r3):
     first_term = s if s is not None else None
@@ -82,19 +103,4 @@ def __format_concat_term(term):
 
 def __get_transition(e1, e2, states):
     return states[e1].get(e2) if states.get(e1) is not None else None
-
-def __pre_process_fa_to_er(states, initial_states, final_states):
-    new_initial_state = 'new_i'
-    states[new_initial_state] = {}
-    
-    for state in initial_states:
-        states[new_initial_state][state] = ''
-                
-    new_final_state = 'new_f'
-    states[new_final_state] = {}
-    
-    for state in final_states:
-        states[state][new_final_state] = ''
-    
-    return new_initial_state, new_final_state, states
             
