@@ -41,39 +41,45 @@ def __filter_internal_states(states, initial_state, final_state):
     return [state for state in states if state != initial_state and state != final_state]
 
 def __format_transition(s, r1, r2, r3):
-    first_term = __format_parenthesis_term(s) if s is not None else None
-    second_term = __format_concat_term(r1) if r1 is not None else None
-    third_term = __format_parenthesis_term(r2) if r2 is not None else None
-    fourth_term = __format_concat_term(r3) if r3 is not None else None
+    first_term = s if s is not None else None
+    second_term = __format_concat_term(r1) if r1 else ''
+    third_term = r2 if r2 is not None else None
+    fourth_term = __format_concat_term(r3) if r3 else ''
 
-    result = ''
+    first_half = None
     if not first_term is None:
         if first_term == '':
-            result = 'λ + '
+            first_half = 'λ'
         else:
-            result = first_term + ' + '
+            first_half = first_term
     
     if not second_term and not third_term and not fourth_term:
         if second_term == '' or third_term == '' or fourth_term == '':
-            return result + ' λ'
+            return __format_sum(first_half, 'λ')
     
-    result = result + second_term if second_term else result
-    result = result + third_term + '*' if third_term else result
-    result = result + fourth_term if fourth_term else result
-    return result
+    second_half = second_term
+    second_half = second_half + '(' + third_term + ')*' if third_term else second_half
+    second_half = second_half + fourth_term
+    return __format_sum(first_half, second_half)
 
-def __format_parenthesis_term(term):
-    if term[0] == '(' and term[-1] == ')':
-        return term
-    return '(' + term + ')'
+def __format_sum(term1, term2):
+    if not term1 and not term2:
+        return None
+    if term1 and not term2:
+        return term1
+    if term2 and not term1:
+        return term2
+    # if term1 == term2:
+    #     return term1
+    return '(' + term1 + '+' + term2 + ')'
 
 def __format_concat_term(term):
-    if '+' in term and not '(' in term:
+    if '+' in term and term[0] != '(' and term[-1] != ')':
         return '(' + term + ')'
     return term
 
 def __get_transition(e1, e2, states):
-    return states[e1].get(e2) if states.get(e1) else None
+    return states[e1].get(e2) if states.get(e1) is not None else None
 
 def __pre_process_fa_to_er(states, initial_states, final_states):
     new_initial_state = 'new_i'
