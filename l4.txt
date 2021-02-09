@@ -1,0 +1,14 @@
+v,nia,npa,nib,npab,i
+a,b
+v
+v,npa,npab
+v,a,nia
+v,b,nib
+nia,a,npa
+nia,b,npab
+npa,a,nia
+npa,b,nib
+nib,a,i
+nib,b,npab
+npab,b,nib
+npab,a,i
