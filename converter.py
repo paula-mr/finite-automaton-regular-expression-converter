@@ -100,11 +100,11 @@ class RegularExpressionConverter:
             return term2
         if term1 == term2:
             return term1
-        return '(' + self.__format_complex_terms(term1) + '+' + self.__format_complex_terms(term2) + ')'
+        return '(' + self.__format_complex_terms(term1) + ' + ' + self.__format_complex_terms(term2) + ')'
 
     def __format_complex_terms(self, term):
         if '+' in term or '*' in term or '(' in term:
-            return ' (' + term + ') '
+            return '(' + term + ')'
         return term
 
     def __format_parenthesis(self, term):
