@@ -36,9 +36,18 @@ def process_transitions(line, states):
 
     for t in transitions_to:
         if state.get(t.strip()):
-            state[t.strip()] = state[t.strip()] + '+' + symbol.strip()
+            state[t.strip()] = __format_sum(state[t.strip()], symbol.strip())
         else:
             state[t.strip()] = symbol.strip()
+
+def __format_sum(item1, item2):
+    if item1 == '':
+        item1 = 'λ'
+    if item2 == '':
+        item2 = 'λ'
+    if item1 == item2:
+        return item1
+    return '(' + item1 + '+' + item2 + ')'
 
 def process_states(line):
     states = {}

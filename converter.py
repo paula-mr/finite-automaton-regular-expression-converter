@@ -34,6 +34,8 @@ def __choose_state_e_with_lower_pe(internal_states, states):
         if number_of_transition_states is None or count_transition_states < number_of_transition_states:
             state_e = state
             number_of_transition_states = count_transition_states
+        elif count_transition_states == number_of_transition_states and state < state_e:
+            state_e = state
 
     return state_e
 
@@ -69,8 +71,8 @@ def __format_sum(term1, term2):
         return term1
     if term2 and not term1:
         return term2
-    # if term1 == term2:
-    #     return term1
+    if term1 == term2:
+        return term1
     return '(' + term1 + '+' + term2 + ')'
 
 def __format_concat_term(term):
