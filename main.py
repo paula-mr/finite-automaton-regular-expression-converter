@@ -2,12 +2,12 @@ import sys
 import os
 
 from file_decoder import read_file
-from converter import FiniteAutomatonRegularExpressionConverter
+from converter import RegularExpressionConverter
 
 def main(argv):
     input_file = get_startup_arguments(argv)
     states, alphabet, initial_states, final_states = read_file(input_file)
-    converter = FiniteAutomatonRegularExpressionConverter(states, initial_states, final_states, alphabet)
+    converter = RegularExpressionConverter(states, initial_states, final_states, alphabet)
     result = converter.convert()
     print(result)
 

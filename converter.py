@@ -1,7 +1,7 @@
-class FiniteAutomatonRegularExpressionConverter:
+class RegularExpressionConverter:
     def __init__(self, states, initial_states, final_states, alphabet):
         self.alphabet = alphabet
-        self.initial_state, self.final_state, self.states = self.__pre_process_fa_to_er(states, initial_states, final_states)
+        self.initial_state, self.final_state, self.states = self.__pre_process_initial_and_final_states(states, initial_states, final_states)
 
     def convert(self):
         internal_states = self.__filter_internal_states()
@@ -22,7 +22,7 @@ class FiniteAutomatonRegularExpressionConverter:
     def __filter_states_other_than_e(self, state_e):
         return [state for state in self.states if state != state_e]
 
-    def __pre_process_fa_to_er(self, states, initial_states, final_states):
+    def __pre_process_initial_and_final_states(self, states, initial_states, final_states):
         new_initial_state = 'new_i'
         states[new_initial_state] = {}
         
